@@ -12,7 +12,6 @@ https://theweatherforecasting.netlify.app
 - Weather forecasts for the upcoming days
 
 ⚡ Install
-To set up the project locally, follow these steps:
 1. Clone the repository:
    ```bash
    git clone https://github.com/NITHIN-85/Weather-report.git
