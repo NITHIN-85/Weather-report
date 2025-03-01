@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Weatherly - Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Weather Dashboard</h1>
+        <div class="search-container">
+            
+            <input type="text" id="location-search" placeholder="Enter city name..." class="compact-search">
+            <button id="search-btn">Search</button>
+            <button id="current-location-btn" class="location-btn">
+                <span class="location-icon">📍</span> Current Location
+            </button>
+            <button id="home-btn" class="home-btn">
+                <span class="home-icon">🏠</span> Home
+            </button>
+        </div>
+        
+        
+
+        <!-- Current Weather Section -->
+        <div class="current-weather">
+            <div class="weather-main">
+                <div class="weather-info">
+                    <img id="weather-icon" alt="weather">
+                    <h1 id="current-temp">--°C</h1>
+                    <p id="weather-desc">Weather description</p>
+                </div>
+                <div class="location-info">
+                    <h2 id="city-name">City, Country</h2>
+                    <p id="current-date">Date</p>
+                </div>
+            </div>
+            <div class="weather-details">
+                <div class="detail-box">
+                    <div class="detail-icon humidity">
+                        <img src="https://icons.veryicon.com/png/Object/Service%20Categories/Humidity.png" alt="Humidity Icon" width="40" height="40" />
+                    </div>
+                    <div class="detail-text">
+                        <p>Humidity</p>
+                        <h3 id="humidity">--%</h3>
+                    </div>
+                </div>
+                <div class="detail-box">
+                    <div class="detail-icon wind">
+                        <img src="http://clipart-library.com/images_k/wind-clipart-transparent/wind-clipart-transparent-19.png" alt="wind speed" width="40" height="40" />
+                    </div>
+                    <div class="detail-text">
+                        <p>Wind Speed</p>
+                        <h3 id="wind-speed">-- km/h</h3>
+                    </div>
+                </div>
+                <div class="detail-card">
+                    <div class="icon uv-icon">
+                        <img src="https://cdn.iconscout.com/icon/premium/png-256-thumb/uv-index-3506428-2932663.png" alt="UV index" width="40" height="40" />
+                    </div>
+                    <div class="detail-info">
+                        <h3>UV Index</h3>
+                        <p id="uv-index">--</p>
+                    </div>
+                </div>
+                <div class="detail-card">
+                    <div class="icon feels-like-icon">
+                        <img src="https://png.pngtree.com/png-clipart/20230105/original/pngtree-sunny-weather-icon-png-image_8874152.png" alt="feels like" width="40" height="40" />
+                    </div>
+                    <div class="detail-info">
+                        <h3>Feels Like</h3>
+                        <p id="feels-like">--°C</p>
+                    </div>
+                </div>
+                <div class="detail-box">
+                    <div class="detail-icon pressure">
+                        <img src="https://cdn-icons-png.flaticon.com/512/8833/8833267.png" alt="Pressure" width="40" height="40" />
+                    </div>
+                    <div class="detail-text">
+                        <p>Pressure</p>
+                        <h3 id="pressure">-- hPa</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Forecast Section -->
+        <div class="forecast-section">
+            <h2>7-Day Forecast</h2>
+            <div class="forecast-scroll">
+                <div id="forecast-container" class="forecast-container"></div>
+            </div>
+        </div>
+
+        <!-- Chart Section -->
+        <div class="chart-section">
+            <div class="chart-header">
+                <h2>Hourly Forecast</h2>
+                <div class="chart-controls">
+                    <button class="metric-btn active" data-metric="temp">Temperature</button>
+                    <button class="metric-btn" data-metric="humidity">Humidity</button>
+                    <button class="metric-btn" data-metric="wind">Wind</button>
+                </div>
+            </div>
+            <div class="chart-container">
+                <canvas id="hourly-chart"></canvas>
+            </div>
+        </div>
+
+        <!-- Historical Section -->
+        <div class="historical-section">
+            <div class="section-header">
+                <h2>Historical Weather Data</h2>
+                <div class="historical-controls">
+                    <button id="historical-btn" class="historical-btn">
+                        <span class="history-icon">📅</span> View Historical Data
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Date Range Dialog (Hidden by default, shown via JavaScript) -->
+            <div id="date-range-dialog" class="date-range-dialog" style="display: none;">
+                <div class="dialog-content">
+                    <h3>Select Date Range</h3>
+                    <div class="date-inputs">
+                        <div class="input-group">
+                            <label for="start-date">Start Date:</label>
+                            <input type="date" id="start-date" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="end-date">End Date:</label>
+                            <input type="date" id="end-date" required>
+                        </div>
+                    </div>
+                    <div class="dialog-buttons">
+                        <button id="fetch-history">Fetch Data</button>
+                        <button id="cancel-dialog">Cancel</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Historical Data Container -->
+            <div id="historical-data" class="historical-container">
+                <!-- Historical data cards will be populated here via JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Templates for Historical Data (Hidden) -->
+    <template id="historical-card-template">
+        <div class="historical-day-card">
+            <div class="historical-main">
+                <div class="historical-header">
+                    <h3 class="date"></h3>
+                </div>
+                <div class="historical-weather-main">
+                    <img class="weather-icon" alt="weather">
+                    <div class="temp-info">
+                        <h2 class="temperature"></h2>
+                        <p class="condition"></p>
+                    </div>
+                </div>
+                <div class="historical-details">
+                    <div class="detail-item">
+                        <img src="https://icons.veryicon.com/png/Object/Service%20Categories/Humidity.png" alt="Humidity" width="20" height="20">
+                        <span class="humidity"></span>
+                    </div>
+                    <div class="detail-item">
+                        <img src="http://clipart-library.com/images_k/wind-clipart-transparent/wind-clipart-transparent-19.png" alt="Wind" width="20" height="20">
+                        <span class="wind"></span>
+                    </div>
+                    <div class="detail-item">
+                        <img src="https://cdn.iconscout.com/icon/premium/png-256-thumb/uv-index-3506428-2932663.png" alt="UV" width="20" height="20">
+                        <span class="uv"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>
